@@ -1,0 +1,9 @@
+target/
+*.iml
+*.idea
+logs/
+*.txt
+.attach_pid*
+*.class
+*.so
+*.o

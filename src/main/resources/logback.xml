@@ -1,0 +1,88 @@
+<configuration scan="true" scanPeriod=" 5 seconds">
+
+	<jmxConfigurator />
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss}|%t|%p|%c.%M.%L|%m%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--INFO 日志 -->
+	<appender name="FileInfoLog" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>project.name</Key>
+			<DefaultValue>java-awesome</DefaultValue>
+		</discriminator>
+
+		<!-- 过滤日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>ACCEPT</onMismatch>
+		</filter>
+
+		<sift>
+			<appender name="FILE-INFO"
+				class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<File>./logs/${project.name}/info.log</File>
+				<rollingPolicy
+					class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<!-- rollover daily -->
+					<fileNamePattern>./logs/${${project.name}}-%d{yyyy-MM-dd}-%i.info.log.gz</fileNamePattern>
+					<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+						<!-- or whenever the file size reaches 100MB -->
+						<maxFileSize>30MB</maxFileSize>
+					</timeBasedFileNamingAndTriggeringPolicy>
+					<maxHistory>60</maxHistory>
+				</rollingPolicy>
+				<encoder>
+					<pattern>
+						%d{yyyy-MM-dd HH:mm:ss}|%t|%p|%c.%M.%L|%m%n
+					</pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+
+	<!--ERROR 日志 -->
+	<appender name="FileErrorLog" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>project.name</Key>
+			<DefaultValue>net-monitor-spider</DefaultValue>
+		</discriminator>
+
+		<!-- 过滤日志 -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<sift>
+			<appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<File>./logs/${project.name}/error.log</File>
+				<rollingPolicy
+						class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<!-- rollover daily -->
+					<fileNamePattern>./logs/${${project.name}}-%d{yyyy-MM-dd}-%i.error.log.gz</fileNamePattern>
+					<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+						<!-- or whenever the file size reaches 100MB -->
+						<maxFileSize>30MB</maxFileSize>
+					</timeBasedFileNamingAndTriggeringPolicy>
+					<maxHistory>60</maxHistory>
+				</rollingPolicy>
+				<encoder>
+					<pattern>
+						%d{yyyy-MM-dd HH:mm:ss}|%t|%p|%c.%M.%L|%m%n
+					</pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+<!---->
+	<logger name="github.com.yangfan1224.awesome.concurrent" level="DEBUG" additivity="true">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FileInfoLog"/>
+		<appender-ref ref="FileErrorLog"/>
+	</root>
+</configuration>
