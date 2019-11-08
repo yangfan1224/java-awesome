@@ -2,13 +2,13 @@ package github.com.yangfan1224.awesome.okhttp;
 
 import okhttp3.*;
 import okio.ByteString;
-import org.whispersystems.signalservice.internal.websocket.WebSocketProtos;
 
-import java.io.IOException;
-
+/**
+ * @author yangfan
+ */
 public class WebSocketClient {
     public static void main(String [] args) {
-        String wsUrl = "ws://" + "182.140.244.182" + ":" + 8090 + "/v1/websocket/";
+        String wsUrl = "ws://" + "localhost" + ":" + 8090 + "/v1/websocket/";
 //新建client
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
@@ -26,13 +26,7 @@ public class WebSocketClient {
                 System.out.println("client response:" + response);
 
                 //开启消息定时发送
-                byte[] message = WebSocketProtos.WebSocketMessage.newBuilder()
-                        .setType(WebSocketProtos.WebSocketMessage.Type.REQUEST)
-                        .setRequest(WebSocketProtos.WebSocketRequestMessage.newBuilder()
-                                .setId(System.currentTimeMillis())
-                                .setPath("/v1/keepalive/provisioning")
-                                .setVerb("GET")
-                                .build()).build().toByteArray();
+                byte[] message = "hello,world".getBytes();
                 if (!webSocket.send(ByteString.of(message))) {
                     System.out.println("webSocket send error");
                 }
