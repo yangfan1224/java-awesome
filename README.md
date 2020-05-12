@@ -1,2 +1,2 @@
-# java-awesome
-Awesome code for java
+# java-example-code
+Example code for java
